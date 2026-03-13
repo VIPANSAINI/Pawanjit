@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ਕੰਪਿਊਟਰ ਵਿਗਿਆਨ ਕਵਿਜ਼ | PSEB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gurmukhi:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --fg: #f1f5f9;
+            --muted: #94a3b8;
+            --accent: #f97316;
+            --accent-dark: #ea580c;
+            --border: #334155;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Space Grotesk', 'Noto Sans Gurmukhi', sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .punjabi-font {
+            font-family: 'Noto Sans Gurmukhi', sans-serif;
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 40%);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(249, 115, 22, 0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+        /* Card Styling */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 10px -1px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Option Button */
+        .option-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            text-align: left;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            transition: all 0.2s;
+            cursor: pointer;
+            color: var(--fg);
+        }
+
+        .option-btn:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: var(--accent);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .option-btn.selected {
+            border-color: var(--accent);
+            background: rgba(249, 115, 22, 0.2);
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        /* Timer */
+        .timer-circle {
+            transform: rotate(-90deg);
+            transform-origin: center;
+        }
+    </style>
+</head>
+<body class="punjabi-font">
+
+    <div class="bg-pattern"></div>
+
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home')">
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">ਕੰਪਿਊਟਰ ਵਿਗਿਆਨ ਕਵਿਜ਼</h1>
+                    <p class="text-xs text-slate-400">PSEB Punjab</p>
+                </div>
+            </div>
+            <nav class="flex gap-2 bg-slate-800/50 p-1 rounded-lg">
+                <button onclick="showPage('home')" id="nav-home" class="px-4 py-2 rounded-md text-sm font-medium transition hover:bg-slate-700">ਹੋਮ</button>
+                <button onclick="showPage('about')" id="nav-about" class="px-4 py-2 rounded-md text-sm font-medium transition hover:bg-slate-700">ਮੇਰੇ ਬਾਰੇ</button>
+            </nav>
+        </header>
+
+        <!-- HOME PAGE -->
+        <main id="page-home">
+            <div class="text-center mb-12 pt-8">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">ਆਪਣੀ ਜਮਾਤ ਚੁਣੋ</h2>
+                <p class="text-slate-400 max-w-md mx-auto">ਹੇਠਾਂ ਦਿੱਤੀ ਜਮਾਤ ਚੁਣੋ। ਤੁਹਾਨੂੰ 10 ਸਵਾਲ ਦਿੱਤੇ ਜਾਣਗੇ।</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="class-grid">
+                <!-- Classes generated by JS -->
+            </div>
+
+            <div class="text-center">
+                <button id="start-btn" onclick="startQuiz()" disabled class="btn-primary text-lg px-8 py-3 opacity-50 cursor-not-allowed">
+                    ਕਵਿਜ਼ ਸ਼ੁਰੂ ਕਰੋ
+                </button>
+            </div>
+        </main>
+
+        <!-- QUIZ PAGE -->
+        <main id="page-quiz" class="hidden">
+            <div class="card rounded-xl p-6 md:p-8 mb-6">
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <span class="text-sm text-slate-400">ਸਵਾਲ <span id="q-num">1</span>/10</span>
+                        <div class="progress-bar w-48 mt-2">
+                            <div id="progress" class="progress-fill" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="relative w-16 h-16">
+                        <svg class="w-16 h-16" viewBox="0 0 36 36">
+                            <path class="text-slate-700" stroke="currentColor" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                            <path id="timer-path" class="text-orange-500 timer-circle" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        </svg>
+                        <span id="timer-text" class="absolute inset-0 flex items-center justify-center text-xl font-bold text-orange-400">30</span>
+                    </div>
+                </div>
+
+                <!-- Question -->
+                <h3 id="question-text" class="text-xl md:text-2xl font-semibold mb-6 min-h-[60px]">Loading...</h3>
+
+                <!-- Options -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Options generated by JS -->
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="prevQuestion()" id="prev-btn" class="bg-slate-700 px-6 py-2 rounded-lg hover:bg-slate-600 transition disabled:opacity-50" disabled>ਪਿਛਲਾ</button>
+                <button onclick="nextQuestion()" id="next-btn" class="btn-primary px-6 py-2" disabled>ਅਗਲਾ</button>
+            </div>
+        </main>
+
+        <!-- RESULT PAGE -->
+        <main id="page-result" class="hidden text-center py-12">
+            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
+                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold mb-2">ਨਤੀਜਾ</h2>
+            <p class="text-slate-400 mb-6">ਤੁਹਾਡਾ ਸਕੋਰ</p>
+            
+            <div class="text-6xl font-bold text-orange-400 mb-2" id="score-text">8/10</div>
+            <p class="text-slate-400 mb-8" id="score-msg">ਬਹੁਤ ਵਧੀਆ ਪ੍ਰਦਰਸ਼ਨ!</p>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <button onclick="restartQuiz()" class="btn-primary">ਦੁਬਾਰਾ ਖੇਡੋ</button>
+                <button onclick="showPage('home')" class="bg-slate-700 px-6 py-2 rounded-lg hover:bg-slate-600 transition">ਹੋਮ 'ਤੇ ਵਾਪਸ ਜਾਓ</button>
+            </div>
+        </main>
+
+        <!-- ABOUT PAGE -->
+        <main id="page-about" class="hidden">
+            <div class="card rounded-xl overflow-hidden max-w-2xl mx-auto">
+                <div class="h-64 md:h-80 relative">
+                    <img src="https://z-cdn-media.chatglm.cn/files/28d81286-a923-4219-ae05-9ce09ab60ac0.jpg?auth_key=1873383831-54f0613593fc43f5a105da6059fed9d2-0-023b187c134773d6e1b8d91f240035c0" 
+                         alt="Pawan Sohal" 
+                         class="w-full h-full object-cover object-top">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-800 via-transparent to-transparent"></div>
+                </div>
+                <div class="p-6 text-center -mt-12 relative z-10">
+                    <h2 class="text-2xl font-bold text-white mb-1">ਪਵਨਜੀਤ ਸਿੰਘ</h2>
+                    <p class="text-orange-400 font-medium mb-4">Pawanjit Singh</p>
+                   
+                    <span class="inline-block px-3 py-1 bg-slate-700 rounded-full text-sm mb-4">ਕੰਪਿਊਟਰ ਫੈਕਲਟੀ</span>
+                    <span class="inline-block px-3 py-1 bg-slate-700 rounded-full text-sm mb-4"> ਸ.ਸ.ਸ.ਸ ਬਚੀਵਿੰਡ (ਅੰਮ੍ਰਿਤਸਰ)</span>
+                    
+                    <p class="text-slate-300 leading-relaxed mb-6">
+                        ਪੰਜਾਬ ਸਕੂਲ ਸਿੱਖਿਆ ਬੋਰਡ (PSEB) ਲਈ ਕੰਪਿਊਟਰ ਵਿਗਿਆਨ ਦੇ ਮਾਹਰ। 6ਵੀਂ ਤੋਂ 12ਵੀਂ ਜਮਾਤ ਦੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਗੁਣਵੱਤਾ ਵਾਲੀ ਸਿੱਖਿਆ ਪ੍ਰਦਾਨ ਕਰਦੇ ਹਾਂ।
+                    </p>
+                    
+                    <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-700">
+                        <div>
+                            <div class="text-xl font-bold text-white">7</div>
+                            <div class="text-xs text-slate-400">ਜਮਾਤਾਂ</div>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold text-white">700+</div>
+                            <div class="text-xs text-slate-400">ਸਵਾਲ</div>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold text-white">PSEB</div>
+                            <div class="text-xs text-slate-400">ਪਾਠਕ੍ਰਮ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        // ===== QUESTION BANK (SAMPLE DATA FOR FUNCTIONALITY) =====
+        // To reach 100 questions per class, simply add more objects to the arrays below.
+        const questionsDB = {
+            6: [
+                { q: "ਕੰਪਿਊਟਰ ਕੀ ਹੈ?", options: ["ਇੱਕ ਮਸ਼ੀਨ", "ਇੱਕ ਪੌਦਾ", "ਇੱਕ ਜਾਨਵਰ", "ਇੱਕ ਇਮਾਰਤ"], answer: 0 },
+                { q: "CPU ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Central Processing Unit", "Central Power Unit", "Computer Processing Unit", "Central Program Unit"], answer: 0 },
+                { q: "ਕੀਬੋਰਡ ਕਿਸ ਕਿਸਮ ਦਾ ਯੰਤਰ ਹੈ?", options: ["ਆਊਟਪੁੱਟ", "ਇੰਨਪੁੱਟ", "ਸਟੋਰੇਜ", "ਪ੍ਰੋਸੈਸਿੰਗ"], answer: 1 },
+                { q: "ਮਾਊਸ ਦਾ ਕੀ ਕੰਮ ਹੈ?", options: ["ਟਾਈਪ ਕਰਨਾ", "ਪੁਆਇੰਟ ਕਰਨਾ", "ਪ੍ਰਿੰਟ ਕਰਨਾ", "ਸਕੈਨ ਕਰਨਾ"], answer: 1 },
+                { q: "ਮਾਨੀਟਰ ਕਿਸ ਕਿਸਮ ਦਾ ਯੰਤਰ ਹੈ?", options: ["ਇੰਨਪੁੱਟ", "ਆਊਟਪੁੱਟ", "ਸਟੋਰੇਜ", "ਪ੍ਰੋਸੈਸਿੰਗ"], answer: 1 },
+                { q: "RAM ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Random Access Memory", "Read Access Memory", "Run Access Memory", "Rapid Access Memory"], answer: 0 },
+                { q: "ਪ੍ਰਿੰਟਰ ਕਿਸ ਕਿਸਮ ਦਾ ਯੰਤਰ ਹੈ?", options: ["ਇੰਨਪੁੱਟ", "ਆਊਟਪੁੱਟ", "ਸਟੋਰੇਜ", "ਪ੍ਰੋਸੈਸਿੰਗ"], answer: 1 },
+                { q: "USB ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Universal Serial Bus", "United Serial Bus", "Universal System Bus", "United System Bus"], answer: 0 },
+                { q: "ਹਾਰਡ ਡਿਸਕ ਕੀ ਹੈ?", options: ["ਇੰਨਪੁੱਟ ਯੰਤਰ", "ਆਊਟਪੁੱਟ ਯੰਤਰ", "ਸਟੋਰੇਜ ਯੰਤਰ", "ਪ੍ਰੋਸੈਸਿੰਗ ਯੰਤਰ"], answer: 2 },
+                { q: "ਸਕੈਨਰ ਕਿਸ ਕਿਸਮ ਦਾ ਯੰਤਰ ਹੈ?", options: ["ਇੰਨਪੁੱਟ", "ਆਊਟਪੁੱਟ", "ਸਟੋਰੇਜ", "ਪ੍ਰੋਸੈਸਿੰਗ"], answer: 0 },
+                { q: "ਕੰਪਿਊਟਰ ਦੀ ਮੇਮੋਰੀ ਦੀ ਛੋਟੀ ਇਕਾਈ ਕੀ ਹੈ?", options: ["ਬਾਈਟ", "ਬਿੱਟ", "KB", "MB"], answer: 1 },
+                { q: "1 ਬਾਈਟ ਵਿੱਚ ਕਿੰਨੇ ਬਿੱਟ ਹੁੰਦੇ ਹਨ?", options: ["2", "4", "8", "16"], answer: 2 },
+                { q: "ਆਪਰੇਟਿੰਗ ਸਿਸਟਮ ਕੀ ਹੈ?", options: ["ਹਾਰਡਵੇਅਰ", "ਸਾਫਟਵੇਅਰ", "ਫਰਮਵੇਅਰ", "ਵਾਇਰਿੰਗ"], answer: 1 },
+                { q: "Windows ਕਿਸ ਕਿਸਮ ਦਾ ਸਾਫਟਵੇਅਰ ਹੈ?", options: ["ਐਪਲੀਕੇਸ਼ਨ", "ਆਪਰੇਟਿੰਗ ਸਿਸਟਮ", "ਯੂਟੀਲਿਟੀ", "ਗੇਮ"], answer: 1 },
+                { q: "ਫਾਈਲ ਦਾ ਵਿਸਤਾਰ ਕੀ ਦਰਸਾਉਂਦਾ ਹੈ?", options: ["ਫਾਈਲ ਦਾ ਨਾਮ", "ਫਾਈਲ ਦੀ ਕਿਸਮ", "ਫਾਈਲ ਦਾ ਆਕਾਰ", "ਫਾਈਲ ਦੀ ਥਾਂ"], answer: 1 }
+            ],
+            7: [
+                { q: "ਕੰਪਿਊਟਰ ਦੀਆਂ ਮੁੱਖ ਇਕਾਈਆਂ ਕਿੰਨੀਆਂ ਹਨ?", options: ["2", "3", "4", "5"], answer: 2 },
+                { q: "ALU ਕੀ ਕਰਦਾ ਹੈ?", options: ["ਕੰਟਰੋਲ", "ਗਣਨਾ", "ਸਟੋਰੇਜ", "ਇੰਨਪੁੱਟ"], answer: 1 },
+                { q: "ROM ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Read Only Memory", "Random Only Memory", "Run Only Memory", "Read One Memory"], answer: 0 },
+                { q: "RAM ਕਿਸ ਕਿਸਮ ਦੀ ਮੈਮੋਰੀ ਹੈ?", options: ["ਸਥਾਈ", "ਅਸਥਾਈ", "ਕੇਵਲ ਪੜ੍ਹਨ ਯੋਗ", "ਕੋਈ ਨਹੀਂ"], answer: 1 },
+                { q: "1 KB ਵਿੱਚ ਕਿੰਨੇ ਬਾਈਟ ਹੁੰਦੇ ਹਨ?", options: ["100", "512", "1024", "2048"], answer: 2 },
+                { q: "BIOS ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Basic Input Output System", "Binary Input Output System", "Basic Input Output Software", "Binary Input Output Software"], answer: 0 },
+                { q: "ਮਦਰਬੋਰਡ ਕੀ ਹੈ?", options: ["ਸਾਫਟਵੇਅਰ", "ਮੁੱਖ ਸਰਕਟ ਬੋਰਡ", "ਸਟੋਰੇਜ ਡਿਵਾਈਸ", "ਇੰਨਪੁੱਟ ਡਿਵਾਈਸ"], answer: 1 },
+                { q: "ਪ੍ਰੋਸੈਸਰ ਕੀ ਹੈ?", options: ["ਇੰਨਪੁੱਟ ਡਿਵਾਈਸ", "ਆਊਟਪੁੱਟ ਡਿਵਾਈਸ", "CPU", "ਸਟੋਰੇਜ"], answer: 2 },
+                { q: "ਸਾਫਟਵੇਅਰ ਦੀਆਂ ਕਿੰਨੀਆਂ ਕਿਸਮਾਂ ਹਨ?", options: ["1", "2", "3", "4"], answer: 1 },
+                { q: "ਸਿਸਟਮ ਸਾਫਟਵੇਅਰ ਦੀ ਉਦਾਹਰਣ ਕੀ ਹੈ?", options: ["MS Word", "Windows", "Photoshop", "Chrome"], answer: 1 },
+                { q: "ਫਾਈਲ ਐਕਸਟੈਂਸ਼ਨ .docx ਕਿਸ ਫਾਈਲ ਦੀ ਹੈ?", options: ["Excel", "PowerPoint", "Word", "Paint"], answer: 2 },
+                { q: "ਫਾਈਲ ਐਕਸਟੈਂਸ਼ਨ .xlsx ਕਿਸ ਫਾਈਲ ਦੀ ਹੈ?", options: ["Word", "Excel", "PowerPoint", "Paint"], answer: 1 },
+                { q: "ਬਾਈਨਰੀ ਵਿੱਚ 2 ਨੂੰ ਕਿਵੇਂ ਲਿਖਿਆ ਜਾਂਦਾ ਹੈ?", options: ["1", "10", "11", "100"], answer: 1 },
+                { q: "ਬਾਈਨਰੀ ਵਿੱਚ 10 ਨੂੰ ਕਿਵੇਂ ਲਿਖਿਆ ਜਾਂਦਾ ਹੈ?", options: ["1000", "1010", "1100", "1110"], answer: 1 },
+                { q: "ਕੰਪਿਊਟਰ ਕਿਸ ਭਾਸ਼ਾ ਨੂੰ ਸਮਝਦਾ ਹੈ?", options: ["ਬਾਈਨਰੀ", "ਅੰਗਰੇਜ਼ੀ", "ਪੰਜਾਬੀ", "ਹਿੰਦੀ"], answer: 0 }
+            ],
+            8: [
+                { q: "ਪ੍ਰੋਗਰਾਮਿੰਗ ਕੀ ਹੈ?", options: ["ਹਾਰਡਵੇਅਰ ਬਣਾਉਣਾ", "ਕੋਡ ਲਿਖਣਾ", "ਸਕੈਨ ਕਰਨਾ", "ਪ੍ਰਿੰਟ ਕਰਨਾ"], answer: 1 },
+                { q: "ਐਲਗੋਰਿਦਮ ਕੀ ਹੈ?", options: ["ਪ੍ਰੋਗਰਾਮ", "ਕਦਮ-ਦਰ-ਕਦਮ ਹੱਲ", "ਸਾਫਟਵੇਅਰ", "ਹਾਰਡਵੇਅਰ"], answer: 1 },
+                { q: "ਫਲੋਅਚਾਰਟ ਕੀ ਹੈ?", options: ["ਚਾਰਟ", "ਗ੍ਰਾਫਿਕਲ ਪ੍ਰਤੀਨਿਧਤਾ", "ਟੇਬਲ", "ਲਿਸਟ"], answer: 1 },
+                { q: "ਫਲੋਅਚਾਰਟ ਵਿੱਚ ਓਵਲ ਆਕਾਰ ਕੀ ਦਰਸਾਉਂਦਾ ਹੈ?", options: ["ਪ੍ਰਕਿਰਿਆ", "ਸ਼ੁਰੂ/ਅੰਤ", "ਇੰਨਪੁੱਟ", "ਨਿਰਣਾ"], answer: 1 },
+                { q: "ਫਲੋਅਚਾਰਟ ਵਿੱਚ ਹੀਰੇ ਦਾ ਆਕਾਰ ਕੀ ਦਰਸਾਉਂਦਾ ਹੈ?", options: ["ਪ੍ਰਕਿਰਿਆ", "ਇੰਨਪੁੱਟ", "ਨਿਰਣਾ/ਫੈਸਲਾ", "ਸ਼ੁਰੂ"], answer: 2 },
+                { q: "ਵੇਰੀਏਬਲ ਕੀ ਹੈ?", options: ["ਸਥਿਰਾਂਕ", "ਡਾਟਾ ਸਟੋਰ ਕਰਨ ਵਾਲੀ ਥਾਂ", "ਫੰਕਸ਼ਨ", "ਲੂਪ"], answer: 1 },
+                { q: "ਇੰਟੀਜਰ ਡਾਟਾ ਟਾਈਪ ਕੀ ਹੈ?", options: ["ਦਸ਼ਮਲਵ ਸੰਖਿਆ", "ਪੂਰਨ ਸੰਖਿਆ", "ਅੱਖਰ", "ਸਤਰ"], answer: 1 },
+                { q: "ਫਲੋਟ ਡਾਟਾ ਟਾਈਪ ਕੀ ਹੈ?", options: ["ਪੂਰਨ ਸੰਖਿਆ", "ਦਸ਼ਮਲਵ ਸੰਖਿਆ", "ਅੱਖਰ", "ਸਤਰ"], answer: 1 },
+                { q: "+ ਆਪਰੇਟਰ ਕੀ ਕਰਦਾ ਹੈ?", options: ["ਘਟਾਉਣਾ", "ਜੋੜਨਾ", "ਗੁਣਾ", "ਭਾਗ"], answer: 1 },
+                { q: "% ਆਪਰੇਟਰ ਕੀ ਕਰਦਾ ਹੈ?", options: ["ਭਾਗ", "ਬਾਕੀ ਦੇਣਾ", "ਗੁਣਾ", "ਜੋੜਨਾ"], answer: 1 },
+                { q: "if-else ਕੀ ਹੈ?", options: ["ਲੂਪ", "ਸ਼ਰਤੀ ਕਥਨ", "ਫੰਕਸ਼ਨ", "ਵੇਰੀਏਬਲ"], answer: 1 },
+                { q: "ਲੂਪ ਕੀ ਹੈ?", options: ["ਸ਼ਰਤ", "ਦੁਹਰਾਉਣ ਵਾਲਾ ਕਥਨ", "ਫੰਕਸ਼ਨ", "ਵੇਰੀਏਬਲ"], answer: 1 },
+                { q: "for ਲੂਪ ਕਿਸ ਲਈ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ?", options: ["ਅਨਿਸ਼ਚਿਤ ਦੁਹਰਾਉ", "ਨਿਸ਼ਚਿਤ ਦੁਹਰਾਉ", "ਕੋਈ ਦੁਹਰਾਉ ਨਹੀਂ", "ਸਿਰਫ ਇੱਕ ਵਾਰ"], answer: 1 },
+                { q: "ਐਰੇ ਕੀ ਹੈ?", options: ["ਵੇਰੀਏਬਲ", "ਇਕੋ ਕਿਸਮ ਦੇ ਡਾਟੇ ਦਾ ਸੰਗ੍ਰਹਿ", "ਫੰਕਸ਼ਨ", "ਲੂਪ"], answer: 1 },
+                { q: "ਐਰੇ ਦਾ ਇੰਡੈਕਸ ਕਿੱਥੋਂ ਸ਼ੁਰੂ ਹੁੰਦਾ ਹੈ?", options: ["1", "0", "-1", "2"], answer: 1 }
+            ],
+            9: [
+                { q: "ਇੰਟਰਨੈੱਟ ਕੀ ਹੈ?", options: ["ਨੈੱਟਵਰਕ ਦਾ ਨੈੱਟਵਰਕ", "ਸਾਫਟਵੇਅਰ", "ਹਾਰਡਵੇਅਰ", "ਪ੍ਰੋਗਰਾਮ"], answer: 0 },
+                { q: "ਵਰਲਡ ਵਾਈਡ ਵੈੱਬ (WWW) ਕੀ ਹੈ?", options: ["ਇੰਟਰਨੈੱਟ", "ਵੈੱਬ ਪੰਨਿਆਂ ਦਾ ਸੰਗ੍ਰਹਿ", "ਬ੍ਰਾਊਜ਼ਰ", "ਸਰਚ ਇੰਜਣ"], answer: 1 },
+                { q: "ਬ੍ਰਾਊਜ਼ਰ ਦੀ ਉਦਾਹਰਣ ਕੀ ਹੈ?", options: ["Windows", "Chrome", "Word", "Photoshop"], answer: 1 },
+                { q: "URL ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Uniform Resource Locator", "Universal Resource Locator", "Uniform Resource Link", "Universal Resource Link"], answer: 0 },
+                { q: "HTTP ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["HyperText Transfer Protocol", "HighText Transfer Protocol", "HyperText Transfer Program", "HighText Transfer Program"], answer: 0 },
+                { q: "ਈਮੇਲ ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Electronic Mail", "Electric Mail", "Electronic Message", "Electric Message"], answer: 0 },
+                { q: "ਸਪ੍ਰੈਡਸ਼ੀਟ ਸਾਫਟਵੇਅਰ ਕੀ ਹੈ?", options: ["MS Word", "MS Excel", "MS Paint", "MS PowerPoint"], answer: 1 },
+                { q: "MS Excel ਵਿੱਚ ਕਾਲਮ ਨੂੰ ਕੀ ਕਹਿੰਦੇ ਹਨ?", options: ["Row", "Column", "Cell", "Sheet"], answer: 1 },
+                { q: "ਪ੍ਰੈਜ਼ੈਂਟੇਸ਼ਨ ਸਾਫਟਵੇਅਰ ਕਿਹੜਾ ਹੈ?", options: ["Excel", "PowerPoint", "Word", "Paint"], answer: 1 },
+                { q: "ਡਾਟਾਬੇਸ ਕੀ ਹੈ?", options: ["ਡਾਟਾ ਦਾ ਸੰਗ੍ਰਹਿ", "ਪ੍ਰੋਗਰਾਮ", "ਨੈੱਟਵਰਕ", "OS"], answer: 0 },
+                { q: "DBMS ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Database Management System", "Data Base Memory System", "Database Manage System", "Data Basic Management System"], answer: 0 },
+                { q: "ਪ੍ਰਾਇਮਰੀ ਕੀ (Primary Key) ਕੀ ਹੈ?", options: ["ਡੁਪਲੀਕੇਟ ਮੁੱਲ", "ਵਿਲੱਖਣ ਪਛਾਣਕਰਤਾ", "ਖਾਲੀ ਮੁੱਲ", "ਕੋਈ ਨਹੀਂ"], answer: 1 },
+                { q: "E-commerce ਦਾ ਅਰਥ ਕੀ ਹੈ?", options: ["ਈਮੇਲ ਵਪਾਰ", "ਇਲੈਕਟ੍ਰਾਨਿਕ ਵਪਾਰ", "ਇੰਜਣੀਅਰਿੰਗ ਵਪਾਰ", "ਕੋਈ ਨਹੀਂ"], answer: 1 },
+                { q: "ਸੋਸ਼ਲ ਮੀਡੀਆ ਦੀ ਉਦਾਹਰਣ ਕੀ ਹੈ?", options: ["Google", "Facebook", "Amazon", "Microsoft"], answer: 1 },
+                { q: "ਬਲੌਗ ਕੀ ਹੈ?", options: ["ਵੈੱਬਸਾਈਟ", "ਆਨਲਾਈਨ ਡਾਇਰੀ", "ਈਮੇਲ", "ਚੈਟ"], answer: 1 }
+            ],
+            10: [
+                { q: "ਆਬਜੈਕਟ ਓਰੀਐਂਟੇਡ ਪ੍ਰੋਗਰਾਮਿੰਗ (OOP) ਕੀ ਹੈ?", options: ["ਪ੍ਰੋਸੀਡਿਊਰਲ ਪ੍ਰੋਗਰਾਮਿੰਗ", "ਆਬਜੈਕਟਾਂ ਦੀ ਵਰਤੋਂ ਕਰਨ ਵਾਲੀ ਪ੍ਰੋਗਰਾਮਿੰਗ", "ਸਿੱਧੀ ਪ੍ਰੋਗਰਾਮਿੰਗ", "ਕੋਈ ਨਹੀਂ"], answer: 1 },
+                { q: "ਕਲਾਸ (Class) ਕੀ ਹੈ?", options: ["ਆਬਜੈਕਟ", "ਆਬਜੈਕਟ ਲਈ ਬਲੂਪ੍ਰਿੰਟ", "ਫੰਕਸ਼ਨ", "ਵੇਰੀਏਬਲ"], answer: 1 },
+                { q: "ਇਨਹੈਰੀਟੈਂਸ (Inheritance) ਕੀ ਹੈ?", options: ["ਗੁਣ ਪ੍ਰਾਪਤ ਕਰਨਾ", "ਗੁਣ ਛੁਪਾਉਣਾ", "ਗੁਣ ਮਿਟਾਉਣਾ", "ਗੁਣ ਬਦਲਣਾ"], answer: 0 },
+                { q: "ਪੋਲੀਮੋਰਫਿਜ਼ਮ (Polymorphism) ਦਾ ਅਰਥ ਕੀ ਹੈ?", options: ["ਇੱਕ ਰੂਪ", "ਕਈ ਰੂਪ", "ਕੋਈ ਰੂਪ ਨਹੀਂ", "ਬਦਲਦਾ ਰੂਪ"], answer: 1 },
+                { q: "ਐਨਕੈਪਸੂਲੇਸ਼ਨ ਕੀ ਹੈ?", options: ["ਡਾਟਾ ਲੁਕਾਉਣਾ", "ਡਾਟਾ ਦਿਖਾਉਣਾ", "ਡਾਟਾ ਮਿਟਾਉਣਾ", "ਡਾਟਾ ਕਾਪੀ ਕਰਨਾ"], answer: 0 },
+                { q: "C++ ਵਿੱਚ 'cout' ਕੀ ਹੈ?", options: ["ਇੰਨਪੁੱਟ", "ਆਊਟਪੁੱਟ", "ਵੇਰੀਏਬਲ", "ਫੰਕਸ਼ਨ"], answer: 1 },
+                { q: "Python ਵਿੱਚ ਟਿੱਪਣੀ (Comment) ਕਿਵੇਂ ਲਿਖੀ ਜਾਂਦੀ ਹੈ?", options: ["//", "#", "/*", "--"], answer: 1 },
+                { q: "SQL ਕੀ ਹੈ?", options: ["ਪ੍ਰੋਗਰਾਮਿੰਗ ਭਾਸ਼ਾ", "ਡਾਟਾਬੇਸ ਭਾਸ਼ਾ", "ਸਕ੍ਰਿਪਟਿੰਗ ਭਾਸ਼ਾ", "ਮਾਰਕਅੱਪ ਭਾਸ਼ਾ"], answer: 1 },
+                { q: "SELECT ਕਮਾਂਡ ਕੀ ਕਰਦੀ ਹੈ?", options: ["ਡਾਟਾ ਪਾਉਣਾ", "ਡਾਟਾ ਪ੍ਰਾਪਤ ਕਰਨਾ", "ਡਾਟਾ ਮਿਟਾਉਣਾ", "ਡਾਟਾ ਅੱਪਡੇਟ ਕਰਨਾ"], answer: 1 },
+                { q: "HTML ਕੀ ਹੈ?", options: ["ਪ੍ਰੋਗਰਾਮਿੰਗ ਭਾਸ਼ਾ", "ਮਾਰਕਅੱਪ ਭਾਸ਼ਾ", "ਸਕ੍ਰਿਪਟਿੰਗ ਭਾਸ਼ਾ", "ਡਾਟਾਬੇਸ ਭਾਸ਼ਾ"], answer: 1 },
+                { q: "<p> ਟੈਗ ਕੀ ਦਰਸਾਉਂਦਾ ਹੈ?", options: ["ਪੈਰਾਗ੍ਰਾਫ", "ਪਿਕਚਰ", "ਪੋਰਟ", "ਪ੍ਰਿੰਟ"], answer: 0 },
+                { q: "CSS ਦਾ ਕੰਮ ਕੀ ਹੈ?", options: ["ਸਟਾਈਲ ਕਰਨਾ", "ਸਟੋਰੇਜ", "ਸਕ੍ਰਿਪਟਿੰਗ", "ਸਰਵਰ"], answer: 0 },
+                { q: "ਜਾਵਾਸਕ੍ਰਿਪਟ ਕਿਸ ਲਈ ਵਰਤੀ ਜਾਂਦੀ ਹੈ?", options: ["ਸਟਾਈਲ", "ਇੰਟਰੈਕਟਿਵਿਟੀ", "ਡਾਟਾਬੇਸ", "ਸਰਵਰ"], answer: 1 },
+                { q: "ਸਰਵਰ (Server) ਕੀ ਹੈ?", options: ["ਕਲਾਇੰਟ", "ਸੇਵਾ ਦੇਣ ਵਾਲੀ ਮਸ਼ੀਨ", "ਯੂਜ਼ਰ", "ਬ੍ਰਾਊਜ਼ਰ"], answer: 1 },
+                { q: "ਕਲਾਇੰਟ (Client) ਕੀ ਹੈ?", options: ["ਸਰਵਰ", "ਸੇਵਾ ਲੈਣ ਵਾਲਾ", "ਪ੍ਰੋਗਰਾਮ", "ਡਾਟਾਬੇਸ"], answer: 1 }
+            ],
+            11: [
+                { q: "ਓਪਰੇਟਿੰਗ ਸਿਸਟਮ ਦਾ ਮੁੱਖ ਕੰਮ ਕੀ ਹੈ?", options: ["ਗੇਮ ਖੇਡਣਾ", "ਸਰੋਤਾਂ ਦਾ ਪ੍ਰਬੰਧਨ", "ਫੋਟੋ ਐਡਿਟ", "ਇੰਟਰਨੈੱਟ"], answer: 1 },
+                { q: "ਸ਼ੈਡਿਊਲਿੰਗ (Scheduling) ਕੀ ਹੈ?", options: ["ਪ੍ਰਕਿਰਿਆ ਬਣਾਉਣਾ", "ਪ੍ਰਕਿਰਿਆ ਦਾ ਕ੍ਰਮ ਨਿਰਧਾਰਨ", "ਪ੍ਰਕਿਰਿਆ ਮਿਟਾਉਣਾ", "ਪ੍ਰਕਿਰਿਆ ਰੋਕਣਾ"], answer: 1 },
+                { q: "ਡੈਡਲੌਕ (Deadlock) ਕੀ ਹੈ?", options: ["ਪ੍ਰਕਿਰਿਆ ਚੱਲਣਾ", "ਪ੍ਰਕਿਰਿਆ ਰੁਕਣਾ", "ਪ੍ਰਕਿਰਿਆ ਖਤਮ ਹੋਣਾ", "ਕੋਈ ਨਹੀਂ"], answer: 1 },
+                { q: "ਵਰਚੁਅਲ ਮੈਮੋਰੀ ਕੀ ਹੈ?", options: ["RAM", "ROM", "ਹਾਰਡ ਡਿਸਕ ਨੂੰ RAM ਵਾਂਗ ਵਰਤਣਾ", "Cache"], answer: 2 },
+                { q: "ਫਾਈਲ ਸਿਸਟਮ ਕੀ ਹੈ?", options: ["ਫਾਈਲਾਂ ਦਾ ਸੰਗ੍ਰਹਿ", "ਫਾਈਲਾਂ ਦਾ ਪ੍ਰਬੰਧਨ", "ਫਾਈਲਾਂ ਦੀ ਸੂਚੀ", "ਫਾਈਲਾਂ ਦਾ ਨਾਮ"], answer: 1 },
+                { q: "ਨੈੱਟਵਰਕ ਟੋਪੋਲੋਜੀ ਕੀ ਹੈ?", options: ["ਨੈੱਟਵਰਕ ਦਾ ਆਕਾਰ", "ਨੈੱਟਵਰਕ ਦੀ ਗਤੀ", "ਨੈੱਟਵਰਕ ਦੀ ਸਪੀਡ", "ਨੈੱਟਵਰਕ ਦਾ ਆਕਾਰ"], answer: 0 },
+                { q: "ਸਟਾਰ ਟੋਪੋਲੋਜੀ ਵਿੱਚ ਕੇਂਦਰੀ ਡਿਵਾਈਸ ਕੀ ਹੁੰਦੀ ਹੈ?", options: ["ਰਾਊਟਰ", "ਹੱਬ/ਸਵਿੱਚ", "ਮਾਡਮ", "ਕੇਬਲ"], answer: 1 },
+                { q: "IP ਐਡਰੈੱਸ ਕਿੰਨੇ ਬਿੱਟ ਦਾ ਹੁੰਦਾ ਹੈ (IPv4)?", options: ["16", "32", "64", "128"], answer: 1 },
+                { q: "ਸਬਨੈੱਟ ਮਾਸਕ ਕੀ ਹੈ?", options: ["IP ਐਡਰੈੱਸ", "ਨੈੱਟਵਰਕ ਦੀ ਪਛਾਣ", "ਡੋਮੇਨ", "ਪੋਰਟ"], answer: 1 },
+                { q: "ਫਾਇਰਵਾਲ ਕੀ ਹੈ?", options: ["ਵਾਇਰਸ", "ਸੁਰੱਖਿਆ ਪ੍ਰਣਾਲੀ", "ਹਾਰਡਵੇਅਰ", "ਨੈੱਟਵਰਕ"], answer: 1 },
+                { q: "ਪ੍ਰੋਟੋਕੋਲ ਕੀ ਹੈ?", options: ["ਨਿਯਮਾਂ ਦਾ ਸਮੂਹ", "ਹਾਰਡਵੇਅਰ", "ਸਾਫਟਵੇਅਰ", "ਕੇਬਲ"], answer: 0 },
+                { q: "TCP/IP ਮਾਡਲ ਵਿੱਚ ਕਿੰਨੀਆਂ ਪਰਤਾਂ ਹਨ?", options: ["3", "4", "5", "7"], answer: 1 },
+                { q: "OSI ਮਾਡਲ ਵਿੱਚ ਕਿੰਨੀਆਂ ਪਰਤਾਂ ਹਨ?", options: ["4", "5", "6", "7"], answer: 3 },
+                { q: "ਰਾਊਟਿੰਗ ਕੀ ਹੈ?", options: ["ਡਾਟਾ ਭੇਜਣਾ", "ਡਾਟਾ ਦਾ ਰਸਤਾ ਚੁਣਨਾ", "ਡਾਟਾ ਸਟੋਰ ਕਰਨਾ", "ਡਾਟਾ ਮਿਟਾਉਣਾ"], answer: 1 },
+                { q: "DHCP ਦਾ ਕੰਮ ਕੀ ਹੈ?", options: ["IP ਐਡਰੈੱਸ ਦੇਣਾ", "ਡੋਮੇਨ ਨਾਮ ਦੇਣਾ", "ਫਾਈਲ ਟ੍ਰਾਂਸਫਰ", "ਈਮੇਲ"], answer: 0 }
+            ],
+            12: [
+                { q: "ਡਾਟਾ ਸਟ੍ਰਕਚਰ ਕੀ ਹੈ?", options: ["ਡਾਟਾ ਸਟੋਰ ਕਰਨ ਦਾ ਤਰੀਕਾ", "ਪ੍ਰੋਗਰਾਮ", "ਆਲਗੋਰਿਦਮ", "ਕੰਪਾਈਲਰ"], answer: 0 },
+                { q: "ਸਟੈਕ (Stack) ਕਿਸ ਸਿਧਾਂਤ 'ਤੇ ਕੰਮ ਕਰਦਾ ਹੈ?", options: ["FIFO", "LIFO", "LILO", "FILO"], answer: 1 },
+                { q: "ਕਤਾਰ (Queue) ਕਿਸ ਸਿਧਾਂਤ 'ਤੇ ਕੰਮ ਕਰਦੀ ਹੈ?", options: ["LIFO", "FIFO", "LILO", "FILO"], answer: 1 },
+                { q: "ਲਿੰਕਡ ਲਿਸਟ ਕੀ ਹੈ?", options: ["ਐਰੇ", "ਨੋਡਾਂ ਦਾ ਸਮੂਹ", "ਸਟੈਕ", "ਕਤਾਰ"], answer: 1 },
+                { q: "ਟ੍ਰੀ ਕਿਸ ਕਿਸਮ ਦਾ ਡਾਟਾ ਸਟ੍ਰਕਚਰ ਹੈ?", options: ["ਲੀਨੀਅਰ", "ਨਾਨ-ਲੀਨੀਅਰ", "ਸਿੰਗਲ", "ਡਬਲ"], answer: 1 },
+                { q: "ਬਾਈਨਰੀ ਸਰਚ ਦਾ ਸਮਾਂ ਚੱਕਰ ਕੀ ਹੈ?", options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], answer: 1 },
+                { q: "ਬਬਲ ਸੌਰਟ ਕੀ ਹੈ?", options: ["ਖੋਜ ਆਲਗੋਰਿਦਮ", "ਛਾਂਟੀ ਆਲਗੋਰਿਦਮ", "ਡਾਟਾ ਸਟ੍ਰਕਚਰ", "ਨੈੱਟਵਰਕ"], answer: 1 },
+                { q: "ਰੀਕਰਸ਼ਨ (Recursion) ਕੀ ਹੈ?", options: ["ਫੰਕਸ਼ਨ ਆਪਣੇ ਆਪ ਨੂੰ ਬੁਲਾਉਣਾ", "ਲੂਪ", "ਕੰਡੀਸ਼ਨ", "ਵੇਰੀਏਬਲ"], answer: 0 },
+                { q: "ਪੁਆਇੰਟਰ (Pointer) ਕੀ ਹੈ?", options: ["ਵੇਰੀਏਬਲ", "ਮੈਮੋਰੀ ਐਡਰੈੱਸ ਸਟੋਰ ਕਰਨ ਵਾਲਾ ਵੇਰੀਏਬਲ", "ਫੰਕਸ਼ਨ", "ਕਲਾਸ"], answer: 1 },
+                { q: "ਸਾਫਟਵੇਅਰ ਇੰਜੀਨੀਅਰਿੰਗ ਕੀ ਹੈ?", options: ["ਹਾਰਡਵੇਅਰ ਡਿਜ਼ਾਈਨ", "ਸਾਫਟਵੇਅਰ ਡਿਵੈਲਪਮੈਂਟ ਪ੍ਰਕਿਰਿਆ", "ਨੈੱਟਵਰਕਿੰਗ", "ਡਾਟਾਬੇਸ"], answer: 1 },
+                { q: "SDLC ਦਾ ਪੂਰਾ ਨਾਮ ਕੀ ਹੈ?", options: ["Software Design Life Cycle", "Software Development Life Cycle", "System Development Life Cycle", "Software Data Life Cycle"], answer: 1 },
+                { q: "ਵਾਟਰਫਾਲ ਮਾਡਲ ਕਿਸ ਵਿੱਚ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ?", options: ["ਛੋਟੇ ਪ੍ਰੋਜੈਕਟ", "ਵੱਡੇ ਪ੍ਰੋਜੈਕਟ", "ਗੇਮ", "ਵੈੱਬਸਾਈਟ"], answer: 1 },
+                { q: "ਕੰਪਾਈਲਰ ਕੀ ਕਰਦਾ ਹੈ?", options: ["ਕੋਡ ਚਲਾਉਂਦਾ ਹੈ", "ਕੋਡ ਨੂੰ ਮਸ਼ੀਨ ਭਾਸ਼ਾ ਵਿੱਚ ਬਦਲਦਾ ਹੈ", "ਕੋਡ ਲਿਖਦਾ ਹੈ", "ਕੋਡ ਮਿਟਾਉਂਦਾ ਹੈ"], answer: 1 },
+                { q: "ਇੰਟਰਪ੍ਰੇਟਰ ਕੀ ਕਰਦਾ ਹੈ?", options: ["ਪੂਰਾ ਕੋਡ ਬਦਲਦਾ ਹੈ", "ਲਾਈਨ ਦਰ ਲਾਈਨ ਕੋਡ ਚਲਾਉਂਦਾ ਹੈ", "ਕੋਡ ਸਾਂਭਦਾ ਹੈ", "ਕੋਡ ਪ੍ਰਿੰਟ ਕਰਦਾ ਹੈ"], answer: 1 },
+                { q: "ਬਿੱਗ ਡਾਟਾ (Big Data) ਕੀ ਹੈ?", options: ["ਛੋਟਾ ਡਾਟਾ", "ਬਹੁਤ ਵੱਡੀ ਮਾਤਰਾ ਵਿੱਚ ਡਾਟਾ", "ਕੋਈ ਡਾਟਾ ਨਹੀਂ", "ਸਧਾਰਨ ਡਾਟਾ"], answer: 1 }
+            ]
+        };
+
+        // ===== APP STATE =====
+        let selectedClass = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let timerInterval = null;
+        let timeLeft = 30;
+
+        // ===== DOM ELEMENTS =====
+        const pages = {
+            home: document.getElementById('page-home'),
+            quiz: document.getElementById('page-quiz'),
+            result: document.getElementById('page-result'),
+            about: document.getElementById('page-about')
+        };
+
+        const navBtns = {
+            home: document.getElementById('nav-home'),
+            about: document.getElementById('nav-about')
+        };
+
+        const classGrid = document.getElementById('class-grid');
+        const startBtn = document.getElementById('start-btn');
+
+        // ===== INITIALIZATION =====
+        function init() {
+            renderClassGrid();
+            showPage('home');
+        }
+
+        function renderClassGrid() {
+            classGrid.innerHTML = '';
+            for (let i = 6; i <= 12; i++) {
+                const div = document.createElement('div');
+                div.className = `card p-6 text-center cursor-pointer rounded-xl ${selectedClass === i ? 'border-orange-500 bg-orange-500/10' : ''}`;
+                div.innerHTML = `
+                    <div class="text-4xl font-bold text-orange-400 mb-2">${i}</div>
+                    <div class="text-sm text-slate-400">ਜਮਾਤ</div>
+                `;
+                div.onclick = () => selectClass(i, div);
+                classGrid.appendChild(div);
+            }
+        }
+
+        function selectClass(classNum, element) {
+            selectedClass = classNum;
+            startBtn.disabled = false;
+            startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            // Update visual selection
+            document.querySelectorAll('#class-grid .card').forEach(el => {
+                el.classList.remove('border-orange-500', 'bg-orange-500/10');
+            });
+            element.classList.add('border-orange-500', 'bg-orange-500/10');
+        }
+
+        // ===== PAGE NAVIGATION =====
+        function showPage(pageName) {
+            // Hide all pages
+            Object.values(pages).forEach(p => p.classList.add('hidden'));
+            // Show target page
+            pages[pageName].classList.remove('hidden');
+            
+            // Update Nav active state
+            Object.values(navBtns).forEach(b => b.classList.remove('bg-slate-700'));
+            if (navBtns[pageName]) navBtns[pageName].classList.add('bg-slate-700');
+        }
+
+        // ===== QUIZ LOGIC =====
+        function startQuiz() {
+            if (!selectedClass) return;
+
+            // Reset state
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            
+            // Shuffle and pick 10 questions
+            const allQuestions = [...questionsDB[selectedClass]];
+            for (let i = allQuestions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+            }
+            currentQuestions = allQuestions.slice(0, 10);
+
+            showPage('quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            updateTimerDisplay();
+            startTimer();
+
+            const q = currentQuestions[currentQuestionIndex];
+            
+            document.getElementById('q-num').textContent = currentQuestionIndex + 1;
+            document.getElementById('progress').style.width = `${((currentQuestionIndex + 1) / 10) * 100}%`;
+            document.getElementById('question-text').textContent = q.q;
+            document.getElementById('next-btn').disabled = true;
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn punjabi-font';
+                btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-full bg-slate-600 text-center text-sm mr-3">${idx + 1}</span> ${opt}`;
+                
+                // Check if user already answered this
+                const prevAnswer = userAnswers[currentQuestionIndex];
+                if (prevAnswer !== undefined) {
+                    btn.disabled = true;
+                    if (idx === q.answer) btn.classList.add('correct');
+                    if (idx === prevAnswer && prevAnswer !== q.answer) btn.classList.add('incorrect');
+                    if (idx === prevAnswer) btn.classList.add('selected');
+                } else {
+                    btn.onclick = () => selectAnswer(idx, btn);
+                }
+                
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(index, element) {
+            clearInterval(timerInterval);
+            const q = currentQuestions[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = index;
+            
+            // Visual feedback
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === q.answer) btn.classList.add('correct');
+                if (i === index && index !== q.answer) btn.classList.add('incorrect');
+            });
+            element.classList.add('selected');
+
+            if (index === q.answer) score++;
+
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < 9) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        // ===== TIMER =====
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Auto move if time up
+                    if (userAnswers[currentQuestionIndex] === undefined) {
+                        userAnswers[currentQuestionIndex] = -1; // Mark as skipped
+                    }
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timer-text').textContent = timeLeft;
+            const dashOffset = 100 - (timeLeft / 30) * 100;
+            document.getElementById('timer-path').style.strokeDasharray = `${dashOffset}, 100`;
+        }
+
+        // ===== RESULTS =====
+        function showResults() {
+            clearInterval(timerInterval);
+            showPage('result');
+            
+            const scoreText = document.getElementById('score-text');
+            const scoreMsg = document.getElementById('score-msg');
+            
+            scoreText.textContent = `${score}/10`;
+
+            if (score <= 3) scoreMsg.textContent = "ਹੋਰ ਮਿਹਨਤ ਦੀ ਲੋੜ ਹੈ।";
+            else if (score <= 6) scoreMsg.textContent = "ਚੰਗੀ ਕੋਸ਼ਿਸ਼!";
+            else if (score <= 9) scoreMsg.textContent = "ਬਹੁਤ ਵਧੀਆ ਪ੍ਰਦਰਸ਼ਨ!";
+            else scoreMsg.textContent = "ਸ਼ਾਨਦਾਰ! ਤੁਸੀਂ ਟਾਪਰ ਹੋ!";
+        }
+
+        function restartQuiz() {
+            showPage('home');
+            selectedClass = null;
+            startBtn.disabled = true;
+            startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            renderClassGrid();
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
